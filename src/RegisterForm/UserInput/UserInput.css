@@ -1,0 +1,16 @@
+.UserInput {
+    padding: 0px;
+    position: relative;
+    width: 100%;
+    border: none;
+    outline: none;
+    background-color: rgba(0, 0, 0, 0);
+    color: rgba(0, 0, 0, 0.87);
+    cursor: inherit;
+    font: inherit;
+    opacity: 1;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0,);
+    height: 100%;
+    box-sizing: border-box;
+    margin-top: 14px
+}

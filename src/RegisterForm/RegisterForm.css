@@ -1,0 +1,10 @@
+.RegisterForm {
+    text-align: left;
+    border: 2px solid black;
+    width: 50%;
+    padding: 20px 40px;
+}
+
+.RegisterForm h2 {
+    color: #ff725c;
+}
