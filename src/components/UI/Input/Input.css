@@ -1,0 +1,45 @@
+.wrap-input {
+    width: 100%;
+    position: relative;
+    
+    margin-bottom: 40px;
+}
+
+.fieldTitle {
+    font-size: 16px;
+    color: #999999;
+    line-height: 1.5;
+    padding-left: 2px;
+}
+
+.UserInput {
+    display: block;
+    width: 100%;
+    background: transparent;
+    border: none;
+    font-size: 20px;
+    color: #555555;
+    line-height: 1;
+    padding: 2px;
+    border-bottom: 2px solid #dbdbdb;
+
+    transition: border 500ms ease-in-out;
+}
+
+.UserInput:focus {
+    outline: none;
+    border-bottom: 2px solid rgb(102, 191, 233);
+}
+
+.UserInput:focus::placeholder {
+    color: transparent;
+}
+
+.UserInput::after {
+    transform: scaleX(0);
+    transform-origin: 0% 50%;
+}
+
+.UserInput:focus::after {
+    transform: scaleX(1);
+}
