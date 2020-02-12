@@ -1,0 +1,20 @@
+.Image {
+
+    border: 2px solid black;
+}
+
+.RegisterForm {
+    border: 2px solid black;
+    text-align: left;
+    width: 30%;
+    height: 100%;
+    padding: 20px 40px;
+}
+
+.RegisterForm h2 {
+    color: #ff725c;
+}
+
+.Test {
+    color: #ff725c;
+}
