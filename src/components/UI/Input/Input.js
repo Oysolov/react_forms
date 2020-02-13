@@ -6,7 +6,7 @@ const input = (props) => {
     let inputElement = null;
     let validationError = null;
     if(props.errorMessage && props.touched) {
-        validationError = <p className={classes.Error}>{props.errorMessage}</p>;
+        validationError = <label className={classes.Error}>{props.errorMessage}</label>;
     }
 
     switch(props.elementType) {
