@@ -4,14 +4,14 @@ import classes from './RegisterForm.css';
 import Input from '../../components/UI/Input/Input'
 import Button from '../../components/UI/Button/Button'
 import Checkbox from '../../components/UI/Checkbox/Checkbox';
-import BackgroundPicture from '../../assets/images/left-background.png';
-import Aux from '../../hoc/Aux/Aux';
+import BackgroundPicture from '../../assets/images/unnamed.png';
 import axios from '../../axios';
 
 class RegisterForm extends Component {
     state = {
         registerForm: {
             username: {
+                label: 'USERNAME',
                 elementType: 'input',
                 elementConfig: {
                     type: 'text',
@@ -33,10 +33,11 @@ class RegisterForm extends Component {
                 transient: false
             },
             email: {
+                label: 'EMAIL',
                 elementType: 'input',
                 elementConfig: {
                     type: 'text',
-                    placeholder: 'Email'
+                    placeholder: 'email@address.com'
                 },
                 value: '',
                 validation: {
@@ -58,10 +59,11 @@ class RegisterForm extends Component {
                 transient: false
             },
             password: {
+                label: 'PASSWORD',
                 elementType: 'input',
                 elementConfig: {
                     type: 'password',
-                    placeholder: 'Password'
+                    placeholder: '******'
                 },
                 value: '',
                 validation: {
@@ -69,9 +71,9 @@ class RegisterForm extends Component {
                         value: true,
                         errorMessage: 'Password is required!'
                     },
-                    regex: {
+                    regex: {    
                         value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/,
-                        errorMessage: 'Password must be minimum 6 characters and contain atleast 1 digit, 1 lower case letter, 1 upper case letter and 1 special symbol'
+                        errorMessage: 'Password must contain 6 characters - at least 1 digit, 1 lower, 1 upper case letter and a special symbol'
                     }
                 },
                 validationErrorMessage: '',
@@ -79,10 +81,11 @@ class RegisterForm extends Component {
                 transient: false
             },
             passwordConfirmation: {
+                label: 'CONFIRM PASSWORD',
                 elementType: 'input',
                 elementConfig: {
                     type: 'password',
-                    placeholder: 'Confirm password'
+                    placeholder: '******'
                 },
                 value: '',
                 validation: {
@@ -100,6 +103,7 @@ class RegisterForm extends Component {
                 transient: true
             },
             devSkills: {
+                label: 'DEV SKILLS',
                 elementType: 'input',
                 elementConfig: {
                     type: 'number',
@@ -125,6 +129,7 @@ class RegisterForm extends Component {
                 transient: false
             },
             sex: {
+                label: 'SEX',
                 elementType: 'select',
                 elementConfig: {
                     options: [
@@ -207,20 +212,46 @@ class RegisterForm extends Component {
         }
 
         //this.checkExistingEmail();
+        let continueWithRegistration = this.validateForm();
 
-        let formData = {};
-        for(let formElementId in this.state.registerForm) {
-            if(!this.state.registerForm[formElementId].transient) {
-                formData[formElementId] = this.state.registerForm[formElementId].value;
+        if(continueWithRegistration) {
+            let formData = {};
+            for(let formElementId in this.state.registerForm) {
+                if(!this.state.registerForm[formElementId].transient) {
+                    formData[formElementId] = this.state.registerForm[formElementId].value;
+                }
             }
-        }
-        axios.post('/accounts.json', formData)
+
+            axios.post('/accounts.json', formData)
             .then(response => {
                 alert('Your account has been created successfully.');
             })
             .catch(error => {
                 alert('Something went wrong! You account was not created.');
             });
+        }
+    }
+
+    validateForm = () => {
+        let formIsValid = true;
+
+        const updatedRegisterForm = {...this.state.registerForm};
+        for(let formElementId in updatedRegisterForm) {
+            const updatedFormElement = {...updatedRegisterForm[formElementId]};
+            const validationErrorMessage = this.validate(updatedFormElement.value, {...updatedFormElement.validation});
+            if(validationErrorMessage) {
+                formIsValid = false;
+                updatedFormElement.validationErrorMessage = validationErrorMessage;
+                updatedFormElement.touched = true;
+                updatedRegisterForm[formElementId] = updatedFormElement;
+            }
+        }
+
+        this.setState({
+            registerForm: updatedRegisterForm
+        });
+
+        return formIsValid;
     }
 
     checkExistingEmail = () => {
@@ -229,7 +260,6 @@ class RegisterForm extends Component {
                 const data = response.data;
                 let emailExists = false;
                 for(let id in data) {
-                    //console.log(data[id]);
                     if(data[id].email === this.state.registerForm.email.value) {
                         emailExists = true;
                     }
@@ -285,6 +315,7 @@ class RegisterForm extends Component {
                 {formElementsArray.map(formElement => (
                     <Input
                         key={formElement.id}
+                        label={formElement.config.label}
                         elementType={formElement.config.elementType}
                         elementConfig={formElement.config.elementConfig}
                         value={formElement.config.value}
@@ -306,13 +337,15 @@ class RegisterForm extends Component {
 
         return (
             //ToDo: Make it Layout with Pathing to a second form
-            <Aux>
-                <img src={BackgroundPicture} alt="registration picture" className={classes.Image}/>
+            <div className={classes.Container}>
+                <div className={classes.ImageContainer}>   
+                    <img src={BackgroundPicture} alt="registration" className={classes.Image}/>
+                </div>
                 <div className={classes.RegisterForm}>
-                    <h2 className={classes.Test}>Register Form</h2>
+                    <h2>Register Form</h2>
                     {form}
                  </div>
-            </Aux>
+            </div>
         );
     }
 }

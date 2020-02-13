@@ -1,0 +1,13 @@
+.Checkbox {
+    background-color: white;
+    border: 1px solid #ccc;
+}
+
+.Label {
+    font-size: 16px;
+}
+
+.Error {
+    color: rgb(253, 22, 22);
+    margin-top: 3px;
+}
