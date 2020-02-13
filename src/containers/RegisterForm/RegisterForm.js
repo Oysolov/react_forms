@@ -25,7 +25,7 @@ class RegisterForm extends Component {
                     },
                     minLength: {
                         value: 3,
-                        errorMessage: 'Username must contain atleast 3 characters.'
+                        errorMessage: 'Username must contain at least 3 characters.'
                     }
                 },
                 validationErrorMessage: '',
