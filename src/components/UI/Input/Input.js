@@ -1,15 +1,18 @@
 import React from 'react';
 
+import classes from './Input.css';
+
 const input = (props) => {
     let inputElement = null;
     let validationError = null;
     if(props.errorMessage && props.touched) {
-        validationError = <p>{props.errorMessage}</p>;
+        validationError = <p className={classes.Error}>{props.errorMessage}</p>;
     }
 
     switch(props.elementType) {
         case ('input'):
             inputElement = <input
+                className={classes.InputElement}
                 value={props.value}
                 {...props.elementConfig} 
                 onChange={props.changed} />;
@@ -17,6 +20,7 @@ const input = (props) => {
         case ('select'):
             inputElement = (
                 <select value={props.value}
+                    className={classes.InputElement}
                     onChange={props.changed}>
                     {props.elementConfig.options.map(option => (
                         <option key={option.value} value={option.value}>
@@ -28,14 +32,15 @@ const input = (props) => {
             break;
         default:
             inputElement = <input 
+                className={classes.InputElement}
                 value={props.value}
                 {...props.elementConfig} 
                 onChange={props.changed} />
     }
 
     return (
-        <div >
-            <label>{props.label}</label>
+        <div className={classes.Wrapper}>
+            <label className={classes.Label}>{props.label}</label>
             {inputElement}
             {validationError}
         </div>

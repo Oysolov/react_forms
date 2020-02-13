@@ -4,7 +4,7 @@ import classes from './RegisterForm.css';
 import Input from '../../components/UI/Input/Input'
 import Button from '../../components/UI/Button/Button'
 import Checkbox from '../../components/UI/Checkbox/Checkbox';
-import BackgroundPicture from '../../assets/images/left-background.png';
+import BackgroundPicture from '../../assets/images/unnamed.png';
 import Aux from '../../hoc/Aux/Aux';
 import axios from '../../axios';
 
@@ -12,6 +12,7 @@ class RegisterForm extends Component {
     state = {
         registerForm: {
             username: {
+                label: 'USERNAME',
                 elementType: 'input',
                 elementConfig: {
                     type: 'text',
@@ -33,6 +34,7 @@ class RegisterForm extends Component {
                 transient: false
             },
             email: {
+                label: 'EMAIL',
                 elementType: 'input',
                 elementConfig: {
                     type: 'text',
@@ -58,6 +60,7 @@ class RegisterForm extends Component {
                 transient: false
             },
             password: {
+                label: 'PASSWORD',
                 elementType: 'input',
                 elementConfig: {
                     type: 'password',
@@ -79,6 +82,7 @@ class RegisterForm extends Component {
                 transient: false
             },
             passwordConfirmation: {
+                label: 'CONFIRM PASSWORD',
                 elementType: 'input',
                 elementConfig: {
                     type: 'password',
@@ -100,6 +104,7 @@ class RegisterForm extends Component {
                 transient: true
             },
             devSkills: {
+                label: 'DEV SKILLS',
                 elementType: 'input',
                 elementConfig: {
                     type: 'number',
@@ -125,6 +130,7 @@ class RegisterForm extends Component {
                 transient: false
             },
             sex: {
+                label: 'SEX',
                 elementType: 'select',
                 elementConfig: {
                     options: [
@@ -285,6 +291,7 @@ class RegisterForm extends Component {
                 {formElementsArray.map(formElement => (
                     <Input
                         key={formElement.id}
+                        label={formElement.config.label}
                         elementType={formElement.config.elementType}
                         elementConfig={formElement.config.elementConfig}
                         value={formElement.config.value}
@@ -306,13 +313,15 @@ class RegisterForm extends Component {
 
         return (
             //ToDo: Make it Layout with Pathing to a second form
-            <Aux>
-                <img src={BackgroundPicture} alt="registration picture" className={classes.Image}/>
+            <div className={classes.Container}>
+                <div className={classes.ImageContainer}>   
+                    <img src={BackgroundPicture} alt="registration picture" className={classes.Image}/>
+                </div>
                 <div className={classes.RegisterForm}>
-                    <h2 className={classes.Test}>Register Form</h2>
+                    <h2>Register Form</h2>
                     {form}
                  </div>
-            </Aux>
+            </div>
         );
     }
 }
