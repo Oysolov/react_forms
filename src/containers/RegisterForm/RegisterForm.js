@@ -71,9 +71,9 @@ class RegisterForm extends Component {
                         value: true,
                         errorMessage: 'Password is required!'
                     },
-                    regex: {
+                    regex: {    
                         value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/,
-                        errorMessage: 'Password must be minimum 6 characters and contain atleast 1 digit, 1 lower case letter, 1 upper case letter and 1 special symbol'
+                        errorMessage: 'Password must contain 6 characters - at least 1 digit, 1 lower, 1 upper case letter and a special symbol'
                     }
                 },
                 validationErrorMessage: '',
@@ -339,7 +339,7 @@ class RegisterForm extends Component {
             //ToDo: Make it Layout with Pathing to a second form
             <div className={classes.Container}>
                 <div className={classes.ImageContainer}>   
-                    <img src={BackgroundPicture} alt="registration picture" className={classes.Image}/>
+                    <img src={BackgroundPicture} alt="registration" className={classes.Image}/>
                 </div>
                 <div className={classes.RegisterForm}>
                     <h2>Register Form</h2>

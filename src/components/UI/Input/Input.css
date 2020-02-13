@@ -33,6 +33,7 @@
 .Error {
     color: rgb(253, 22, 22);
     margin-top: 3px;
+    margin-bottom: 0px;
 }
 
 .InputElement:focus {
