@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { NavLink } from 'react-router-dom';
 
 import classes from './RegisterForm.css';
 import Input from '../../components/UI/Input/Input'
@@ -46,7 +47,7 @@ class RegisterForm extends Component {
                         errorMessage: 'Email is required!'
                     },
                     regex: {
-                        value: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                        value: /^(([^<>()\\[\]\\.,;:\s@"]+(\.[^<>()\\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
                         errorMessage: 'Please insert valid email!'
                     },
                     exists: {
@@ -332,6 +333,10 @@ class RegisterForm extends Component {
                     errorMessage={this.state.terms.errorMessage} 
                     />
                 <Button>Register now!</Button>
+                <div className={classes.LoginRedirect}>
+                    <label>You already have an account? Click </label>
+                    <NavLink to="/login">here.</NavLink>
+                </div>
             </form>
         );
 
