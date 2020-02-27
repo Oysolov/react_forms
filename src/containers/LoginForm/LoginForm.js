@@ -19,12 +19,18 @@ class LoginForm extends Component {
             errorMessage: '',
             touched: false
         },
-        incorrectCredentials: false
+        incorrectCredentials: false,
+        successRegistration: null
     }
 
     componentDidMount() {
         if(window.sessionStorage.getItem("Authorization")) {
             this.props.history.push('/profile');
+        }
+
+        const locationState = this.props.location.state;
+        if (locationState) {
+            this.setState({successRegistration: this.props.location.state.success});
         }
     }
 
@@ -78,7 +84,7 @@ class LoginForm extends Component {
             .catch(error => {
                 const status = error.response.status;
                 if(status === 401 || status === 400) {
-                    this.setState({incorrectCredentials: true});
+                    this.setState({incorrectCredentials: true, successRegistration: false});
                 }
             })
     }
@@ -89,9 +95,15 @@ class LoginForm extends Component {
             incorrectCredentials = <label className={classes.Error}>Incorrect credentials!</label>;
         }
 
+        let successfulRegistration = null;
+        if(this.state.successRegistration) {
+            successfulRegistration = <label className={classes.Success}>{this.state.successRegistration}</label>;
+        }
+
         const loginForm = (
             <form onSubmit={this.loginHandler}>
                 {incorrectCredentials}
+                {successfulRegistration}
                 <Input key='usernameOrEmail'
                     elementType='input'
                     elementConfig={{

@@ -240,7 +240,10 @@ class RegisterForm extends Component {
 
         axios.post('/register', formData)
             .then(response => {
-                this.props.history.replace('/login');
+                this.props.history.replace({
+                    pathname: '/login',
+                    state: {success: 'Your account have been created successfully'}
+                });
             })
             .catch(error => {
                 const errorMessage = error.response.data;
