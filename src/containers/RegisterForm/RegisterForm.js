@@ -144,10 +144,6 @@ class RegisterForm extends Component {
                 },
                 value: 'male',
                 validation: {
-                    invalid: {
-                        value: false,
-                        errorMessage: 'Please choose valid gender.'
-                    }
                 },
                 validationErrorMessage: '',
                 transient: false
@@ -166,9 +162,24 @@ class RegisterForm extends Component {
         }   
     }
 
+    componentDidMount() {
+        if(window.sessionStorage.getItem("Authorization")) {
+            this.props.history.push('/profile');
+        }
+    }
+
     inputChangeHandler = (event, inputId) => {
-        const updatedRegisterForm = this.clearErrorMessages();
+        const updatedRegisterForm = {...this.state.registerForm};
         const updatedFormElement = {...updatedRegisterForm[inputId]};
+
+        if(updatedFormElement.validationErrorMessage) {
+            const updatedFormElementValidation = {...updatedFormElement.validation};
+            const updatedFormElementExistsValidation = {...updatedFormElementValidation.exists};
+            updatedFormElementExistsValidation.value = false;
+            updatedFormElementValidation.exists = updatedFormElementExistsValidation;
+            updatedFormElement.validation = updatedFormElementValidation;
+        }
+
         updatedFormElement.value = event.target.value;
         updatedFormElement.validationErrorMessage = this.validate(updatedFormElement.value, updatedFormElement.validation);
         updatedFormElement.touched = true;
@@ -226,72 +237,39 @@ class RegisterForm extends Component {
                 formData[formElementId] = this.state.registerForm[formElementId].value;
             }
         }
-        debugger;
+
         axios.post('/register', formData)
-        .then(response => {
-            this.props.history.replace('/login');
-        })
-        .catch(error => {
-            const errorMessage = error.response.data;
-            this.handleErrorResponse(errorMessage);
-        });
+            .then(response => {
+                this.props.history.replace({
+                    pathname: '/login',
+                    state: {success: 'Your account have been created successfully'}
+                });
+            })
+            .catch(error => {
+                const errorMessage = error.response.data;
+                this.handleErrorResponse(errorMessage);
+            });
     }
 
     handleErrorResponse = (errorMessage) => {
         if (errorMessage.includes('Username')){
-            this.handleInvalidFieldValue('username', 'exists', true);
+            this.handleInvalidFieldValue('username', 'exists');
         } else if (errorMessage.includes('Email')) {
-            this.handleInvalidFieldValue('email', 'exists', true);
-        } else if (errorMessage.includes('gender')) {
-            this.handleInvalidFieldValue('gender', 'invalid', true);
+            this.handleInvalidFieldValue('email', 'exists');
         }
         this.validateForm();
     }
 
-    handleInvalidFieldValue = (field, errorType, errorMessageValue) => {
+    handleInvalidFieldValue = (field, errorType) => {
         const updatedRegisterForm = {...this.state.registerForm};
-        const updatedField = {...updatedRegisterForm[field]};
+        const updatedField = {...updatedRegisterForm[field]};   
         const updatedValidation = {...updatedField.validation};
         const updatedValidationType = {...updatedValidation[errorType]};
-        updatedValidationType.value = errorMessageValue;
+        updatedValidationType.value = true;
         updatedValidation[errorType] = updatedValidationType;
         updatedField.validation = updatedValidation;
         updatedRegisterForm[field] = updatedField;
         this.setState({registerForm: updatedRegisterForm});
-    }
-
-    clearErrorMessages = () => {
-        // this.handleInvalidFieldValue('username', 'exists', false);
-        // this.handleInvalidFieldValue('email', 'exists', false);
-        // this.handleInvalidFieldValue('gender', 'invalid', false);
-        const updatedRegisterForm = {...this.state.registerForm};
-        const updatedUsername = {...updatedRegisterForm.username};
-        const updatedEmail = {...updatedRegisterForm.email};
-        const updatedGender = {...updatedRegisterForm.gender};
-        const updatedUsernameValidation = {...updatedUsername.validation};
-        const updatedEmailValidation = {...updatedEmail.validation};
-        const updatedGenderValidation = {...updatedGender.validation};
-        const updatedUsernameValidationType = {...updatedUsernameValidation.exists};
-        const updatedEmailValidationType = {...updatedEmailValidation.exists};
-        const updatedGenderValidationType = {...updatedGenderValidation.invalid};
-
-        updatedUsernameValidationType.value = false;;
-        updatedEmailValidationType.value = false;
-        updatedGenderValidationType.value = false;
-
-        updatedUsernameValidation.exists = updatedUsernameValidationType;
-        updatedEmailValidation.exists = updatedEmailValidationType;
-        updatedGenderValidation.invalid = updatedGenderValidationType;
-
-        updatedUsername.validation = updatedUsernameValidation;
-        updatedEmail.validation = updatedEmailValidation;
-        updatedGender.validation = updatedGenderValidation;
-
-        updatedRegisterForm.username = updatedUsername;
-        updatedRegisterForm.email = updatedEmail;
-        updatedRegisterForm.gender = updatedGender;
-
-        return updatedRegisterForm;
     }
 
     validateForm = () => {

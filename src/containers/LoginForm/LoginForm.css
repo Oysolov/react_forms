@@ -38,6 +38,13 @@
     margin-bottom: 0px;
 }
 
+.Success {
+    font-weight: bold;
+    color: rgb(6, 179, 6);
+    margin-top: 3px;
+    margin-bottom: 0px;
+}
+
 .Button {
     margin: 0 auto;
     margin-top: 40px;
