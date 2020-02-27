@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
+import { NavLink } from 'react-router-dom';
 
 import classes from './RegisterForm.css';
 import Input from '../../components/UI/Input/Input'
 import Button from '../../components/UI/Button/Button'
 import Checkbox from '../../components/UI/Checkbox/Checkbox';
-import BackgroundPicture from '../../assets/images/unnamed.png';
+import BackgroundPicture from '../../assets/images/register_background.png';
 import axios from '../../axios';
 
 class RegisterForm extends Component {
@@ -26,6 +27,10 @@ class RegisterForm extends Component {
                     minLength: {
                         value: 3,
                         errorMessage: 'Username must contain at least 3 characters.'
+                    },
+                    exists: {
+                        value: false,
+                        errorMessage: 'This username is already taken!'
                     }
                 },
                 validationErrorMessage: '',
@@ -46,12 +51,12 @@ class RegisterForm extends Component {
                         errorMessage: 'Email is required!'
                     },
                     regex: {
-                        value: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                        value: /^(([^<>()\\[\]\\.,;:\s@"]+(\.[^<>()\\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
                         errorMessage: 'Please insert valid email!'
                     },
                     exists: {
                         value: false,
-                        errorMessage: 'This email is already used.'
+                        errorMessage: 'This email is already taken!'
                     }
                 },
                 validationErrorMessage: '',
@@ -128,8 +133,8 @@ class RegisterForm extends Component {
                 touched: false,
                 transient: false
             },
-            sex: {
-                label: 'SEX',
+            gender: {
+                label: 'Gender',
                 elementType: 'select',
                 elementConfig: {
                     options: [
@@ -138,7 +143,12 @@ class RegisterForm extends Component {
                     ]
                 },
                 value: 'male',
-                validation: {},
+                validation: {
+                    invalid: {
+                        value: false,
+                        errorMessage: 'Please choose valid gender.'
+                    }
+                },
                 validationErrorMessage: '',
                 transient: false
             }
@@ -157,7 +167,7 @@ class RegisterForm extends Component {
     }
 
     inputChangeHandler = (event, inputId) => {
-        const updatedRegisterForm = {...this.state.registerForm};
+        const updatedRegisterForm = this.clearErrorMessages();
         const updatedFormElement = {...updatedRegisterForm[inputId]};
         updatedFormElement.value = event.target.value;
         updatedFormElement.validationErrorMessage = this.validate(updatedFormElement.value, updatedFormElement.validation);
@@ -197,39 +207,91 @@ class RegisterForm extends Component {
         if(rules.matches && value !== this.state.registerForm.password.value && !validationErrorMessage) {
             validationErrorMessage = rules.matches.errorMessage;
         }
-        // if(rules.exists && rules.exists.value && !validationErrorMessage) {
-        //     validationErrorMessage = rules.exists.errorMessage;
-        //     this.setExistingEmailState(true);
-        // }
+        if(rules.exists && rules.exists.value && !validationErrorMessage) {
+            validationErrorMessage = rules.exists.errorMessage;
+        }
 
         return validationErrorMessage;
     }
 
     registerHandler = (event) => {
         event.preventDefault();
-        if(!this.checkAcceptedTerms()) {
+        if(!this.checkAcceptedTerms() || !this.validateForm()) {
             return;
         }
 
-        //this.checkExistingEmail();
-        let continueWithRegistration = this.validateForm();
-
-        if(continueWithRegistration) {
-            let formData = {};
-            for(let formElementId in this.state.registerForm) {
-                if(!this.state.registerForm[formElementId].transient) {
-                    formData[formElementId] = this.state.registerForm[formElementId].value;
-                }
+        let formData = {};
+        for(let formElementId in this.state.registerForm) {
+            if(!this.state.registerForm[formElementId].transient) {
+                formData[formElementId] = this.state.registerForm[formElementId].value;
             }
-
-            axios.post('/accounts.json', formData)
-            .then(response => {
-                alert('Your account has been created successfully.');
-            })
-            .catch(error => {
-                alert('Something went wrong! You account was not created.');
-            });
         }
+        debugger;
+        axios.post('/register', formData)
+        .then(response => {
+            this.props.history.replace('/login');
+        })
+        .catch(error => {
+            const errorMessage = error.response.data;
+            this.handleErrorResponse(errorMessage);
+        });
+    }
+
+    handleErrorResponse = (errorMessage) => {
+        if (errorMessage.includes('Username')){
+            this.handleInvalidFieldValue('username', 'exists', true);
+        } else if (errorMessage.includes('Email')) {
+            this.handleInvalidFieldValue('email', 'exists', true);
+        } else if (errorMessage.includes('gender')) {
+            this.handleInvalidFieldValue('gender', 'invalid', true);
+        }
+        this.validateForm();
+    }
+
+    handleInvalidFieldValue = (field, errorType, errorMessageValue) => {
+        const updatedRegisterForm = {...this.state.registerForm};
+        const updatedField = {...updatedRegisterForm[field]};
+        const updatedValidation = {...updatedField.validation};
+        const updatedValidationType = {...updatedValidation[errorType]};
+        updatedValidationType.value = errorMessageValue;
+        updatedValidation[errorType] = updatedValidationType;
+        updatedField.validation = updatedValidation;
+        updatedRegisterForm[field] = updatedField;
+        this.setState({registerForm: updatedRegisterForm});
+    }
+
+    clearErrorMessages = () => {
+        // this.handleInvalidFieldValue('username', 'exists', false);
+        // this.handleInvalidFieldValue('email', 'exists', false);
+        // this.handleInvalidFieldValue('gender', 'invalid', false);
+        const updatedRegisterForm = {...this.state.registerForm};
+        const updatedUsername = {...updatedRegisterForm.username};
+        const updatedEmail = {...updatedRegisterForm.email};
+        const updatedGender = {...updatedRegisterForm.gender};
+        const updatedUsernameValidation = {...updatedUsername.validation};
+        const updatedEmailValidation = {...updatedEmail.validation};
+        const updatedGenderValidation = {...updatedGender.validation};
+        const updatedUsernameValidationType = {...updatedUsernameValidation.exists};
+        const updatedEmailValidationType = {...updatedEmailValidation.exists};
+        const updatedGenderValidationType = {...updatedGenderValidation.invalid};
+
+        updatedUsernameValidationType.value = false;;
+        updatedEmailValidationType.value = false;
+        updatedGenderValidationType.value = false;
+
+        updatedUsernameValidation.exists = updatedUsernameValidationType;
+        updatedEmailValidation.exists = updatedEmailValidationType;
+        updatedGenderValidation.invalid = updatedGenderValidationType;
+
+        updatedUsername.validation = updatedUsernameValidation;
+        updatedEmail.validation = updatedEmailValidation;
+        updatedGender.validation = updatedGenderValidation;
+
+        updatedRegisterForm.username = updatedUsername;
+        updatedRegisterForm.email = updatedEmail;
+        updatedRegisterForm.gender = updatedGender;
+
+        return updatedRegisterForm;
     }
 
     validateForm = () => {
@@ -252,35 +314,6 @@ class RegisterForm extends Component {
         });
 
         return formIsValid;
-    }
-
-    checkExistingEmail = () => {
-        axios.get('https://react-forms-4a6f0.firebaseio.com/accounts.json')
-            .then(response => {
-                const data = response.data;
-                let emailExists = false;
-                for(let id in data) {
-                    if(data[id].email === this.state.registerForm.email.value) {
-                        emailExists = true;
-                    }
-                }
-                
-                if(emailExists){
-                    this.setExistingEmailState(false);
-                }
-            })
-    }
-
-    setExistingEmailState = (value) => {
-        let updatedRegisterForm = {...this.state.registerForm};
-        let updatedEmail = {...updatedRegisterForm.email};
-        let updatedValidation = {...updatedEmail.validation};
-        let updatedExistsValidation = {...updatedValidation.exists};
-        updatedExistsValidation.value = value;
-        updatedValidation.exists = updatedExistsValidation;
-        updatedEmail.validation = updatedValidation;
-        updatedRegisterForm.email = updatedEmail;
-        this.setState({registerForm: updatedRegisterForm});
     }
 
     checkAcceptedTerms = () => {
@@ -309,7 +342,6 @@ class RegisterForm extends Component {
                 config: this.state.registerForm[key]
             })
         }
-
         const form = (
             <form onSubmit={this.registerHandler}>
                 {formElementsArray.map(formElement => (
@@ -323,7 +355,9 @@ class RegisterForm extends Component {
                         touched={formElement.config.touched}
                         changed={(event) => {
                             this.inputChangeHandler(event, formElement.id);
-                        }} />
+                        }}
+                        className={classes.Input} 
+                    />
                 ))}
                 <Checkbox 
                     label={this.state.terms.label} 
@@ -331,12 +365,15 @@ class RegisterForm extends Component {
                     changed={this.checkboxChangeHandler} 
                     errorMessage={this.state.terms.errorMessage} 
                     />
-                <Button>Register now!</Button>
+                <Button className={classes.Button}>Register now!</Button>
+                <div className={classes.LoginRedirect}>
+                    <label>You already have an account? </label>
+                    <NavLink to="/login">Login</NavLink>
+                </div>
             </form>
         );
 
         return (
-            //ToDo: Make it Layout with Pathing to a second form
             <div className={classes.Container}>
                 <div className={classes.ImageContainer}>   
                     <img src={BackgroundPicture} alt="registration" className={classes.Image}/>

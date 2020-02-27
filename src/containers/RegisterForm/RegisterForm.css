@@ -34,3 +34,22 @@
     height: 100%;
     vertical-align: top;
 }
+
+.LoginRedirect {
+    width: 100%;
+    display: inline-block;
+    margin-top: 50px;
+}
+
+.Button {
+    margin-top: 50px;
+    float: right;
+}
+
+.Input {
+    background-color: transparent;
+    border-top: 0;
+    border-right: 0;
+    border-left: 0;
+    border-radius: 0;
+}

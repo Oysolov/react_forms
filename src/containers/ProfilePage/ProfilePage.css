@@ -1,0 +1,24 @@
+.Container {
+    width: 28%;
+    margin: auto;
+    margin-top: 200px;
+    box-shadow: 3px 3px 5px #ccc;
+    border-bottom-right-radius: 30px;
+}
+
+.ImageContainer {
+    width: 100%;
+}
+
+.Image {
+    width: 100%;
+    height: 130px;
+    border-top-left-radius: 30px;
+}
+
+.ProfileDetails {
+    width: 100%;
+    padding-left: 50px;
+    padding-right: 50px;
+    min-height: 200px;
+}

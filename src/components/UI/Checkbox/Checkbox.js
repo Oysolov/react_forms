@@ -11,7 +11,7 @@ const input = (props) => {
     return (
         <div>
             <input
-                className={classes.Checkbox}
+                className={`${classes.Checkbox} ${props.className || ''}`}
                 type="checkbox"
                 checked={props.checked}
                 onChange={props.changed} />
