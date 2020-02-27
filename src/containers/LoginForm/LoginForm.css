@@ -1,0 +1,51 @@
+.Container {
+    width: 28%;
+    margin: auto;
+    margin-top: 200px;
+    box-shadow: 3px 3px 5px #ccc;
+    border-bottom-right-radius: 30px;
+}
+
+.ImageContainer {
+    width: 100%;
+    background-color: white;
+}
+
+.Image {
+    width: 100%;
+    height: 130px;
+    border-top-left-radius: 30px;
+}
+
+.LoginForm {
+    padding-top: 40px;
+    width: 100%;
+    padding-left: 50px;
+    padding-right: 50px;
+    min-height: 300px;
+    box-sizing: border-box;
+}
+
+.RegisterRedirect {
+    width: 66%;
+    margin: 0 auto;
+    margin-top: 50px;
+}
+
+.Error {
+    color: rgb(253, 22, 22);
+    margin-top: 3px;
+    margin-bottom: 0px;
+}
+
+.Button {
+    margin: 0 auto;
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+    width:200px;
+}
+
+.Input {
+    box-sizing: border-box;
+}

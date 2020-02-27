@@ -1,7 +1,18 @@
 import axios from 'axios';
 
 const instance = axios.create({
-    baseURL: 'https://react-forms-4a6f0.firebaseio.com/'
+    baseURL: 'http://localhost:8080'
+});
+
+instance.interceptors.request.use(request => {
+    const token = window.sessionStorage.getItem("Authorization");
+    if(token) {
+        request.headers.Authorization = 'Bearer ' + token;
+    }
+    return request;
+}, error => {
+    console.log(error);
+    return Promise.reject(error);
 });
 
 export default instance;

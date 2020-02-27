@@ -5,6 +5,7 @@ import classes from './Input.css';
 const input = (props) => {
     let inputElement = null;
     let validationError = null;
+
     if(props.errorMessage && props.touched) {
         validationError = <label className={classes.Error}>{props.errorMessage}</label>;
     }
@@ -12,7 +13,7 @@ const input = (props) => {
     switch(props.elementType) {
         case ('input'):
             inputElement = <input
-                className={classes.InputElement}
+                className={`${classes.InputElement} ${props.className || ''}`}
                 value={props.value}
                 {...props.elementConfig} 
                 onChange={props.changed} />;
@@ -20,7 +21,7 @@ const input = (props) => {
         case ('select'):
             inputElement = (
                 <select value={props.value}
-                    className={classes.InputElement}
+                    className={`${classes.InputElement} ${props.className || ''}`}
                     onChange={props.changed}>
                     {props.elementConfig.options.map(option => (
                         <option key={option.value} value={option.value}>
@@ -32,7 +33,7 @@ const input = (props) => {
             break;
         default:
             inputElement = <input 
-                className={classes.InputElement}
+                className={`${classes.InputElement} ${props.className || ''}`}
                 value={props.value}
                 {...props.elementConfig} 
                 onChange={props.changed} />
