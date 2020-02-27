@@ -22,6 +22,12 @@ class LoginForm extends Component {
         incorrectCredentials: false
     }
 
+    componentDidMount() {
+        if(window.sessionStorage.getItem("Authorization")) {
+            this.props.history.push('/profile');
+        }
+    }
+
     inputChangeHandler = (event, field) => {
         const updatedField = {...this.state[field]};
         updatedField.value = event.target.value;    

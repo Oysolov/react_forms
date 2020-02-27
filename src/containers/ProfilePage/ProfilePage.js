@@ -16,6 +16,10 @@ class ProfilePage extends Component {
     }
 
     componentDidMount() {
+        if(!window.sessionStorage.getItem("Authorization")) {
+            this.props.history.push('/login');
+        }
+        
         axios.get('/profile')
             .then(response => {
                 const profileDetails = response.data;

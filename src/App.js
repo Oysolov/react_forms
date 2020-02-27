@@ -7,7 +7,8 @@ import ProfilePage from './containers/ProfilePage/ProfilePage';
 
 class App extends Component {
   render() {
-    //const isAuthenticated = window.sessionStorage.getItem("Authorization");
+    const isAuthenticated = window.sessionStorage.getItem("Authorization");
+    console.log(isAuthenticated);
     return (
       <div>
         <Switch>
